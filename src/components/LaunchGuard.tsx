@@ -188,15 +188,6 @@ export default function LaunchGuard({ children }: { children: React.ReactNode })
           </a>
         </div>
 
-        {/* Owner Preview Link Note */}
-        <button
-          onClick={() => setIsPreview(true)}
-          className="mt-6 text-[11px] text-white/40 hover:text-white/80 underline underline-offset-4 flex items-center gap-1.5 transition-colors cursor-pointer"
-        >
-          <Eye className="w-3.5 h-3.5" />
-          <span>Client / Owner Preview Mode</span>
-        </button>
-
       </motion.div>
     </div>
   );
