@@ -13,7 +13,7 @@ export default function CallToAction() {
       */}
 
       <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-12 relative z-20">
-        <div 
+        <div
           className="relative w-full py-10 px-8 sm:px-12 md:px-16 rounded-[24px] border border-[#EAE6DF]/60 shadow-[0_15px_35px_rgba(106,74,43,0.02)] flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden bg-white"
         >
           <div className="flex flex-col gap-3 text-left max-w-2xl">
