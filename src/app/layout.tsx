@@ -8,6 +8,8 @@ import FloatingActions from "@/components/FloatingActions";
 import { BookingModalProvider } from "@/context/BookingModalContext";
 import BookingModal from "@/components/BookingModal";
 
+import LaunchGuard from "@/components/LaunchGuard";
+
 export const metadata: Metadata = {
   title: "Pariichay | 360° Counselling Solutions - Discover Your Potential",
   description: "Experience premium, scientific, and Vedic counselling at Pariichay. Specializing in career guidance, parenting, relationship counselling, IQ testing, and biometric assessments.",
@@ -66,20 +68,22 @@ export default function RootLayout({
           }}
         />
         {/* Premium Core UI Elements */}
-        <BookingModalProvider>
-          <LoadingScreen />
-          <ScrollProgress />
-          <Navbar />
-          
-          {/* Page Content */}
-          <main className="flex-grow pt-[80px]">
-            {children}
-          </main>
+        <LaunchGuard>
+          <BookingModalProvider>
+            <LoadingScreen />
+            <ScrollProgress />
+            <Navbar />
+            
+            {/* Page Content */}
+            <main className="flex-grow pt-[80px]">
+              {children}
+            </main>
 
-          <Footer />
-          <FloatingActions />
-          <BookingModal />
-        </BookingModalProvider>
+            <Footer />
+            <FloatingActions />
+            <BookingModal />
+          </BookingModalProvider>
+        </LaunchGuard>
       </body>
     </html>
   );
