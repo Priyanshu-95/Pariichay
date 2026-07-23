@@ -42,3 +42,5 @@ desktop.ini
 .parcel-cache
 .cache/
 .next/cache/
+
+.vercel
