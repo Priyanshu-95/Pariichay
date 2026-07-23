@@ -260,7 +260,7 @@ export default function ConsultationForm({
           <div className="sm:col-span-2 flex flex-col gap-1 w-full min-w-0">
             <label className="font-body text-[11px] sm:text-xs font-semibold text-[#1F2937] flex items-center gap-1">
               <Mail className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
-              Email Address
+              Email Address *
             </label>
             <input
               type="email"
@@ -278,14 +278,19 @@ export default function ConsultationForm({
           {/* Age */}
           <div className="flex flex-col gap-1 w-full min-w-0">
             <label className="font-body text-[11px] sm:text-xs font-semibold text-[#1F2937]">
-              Age
+              Age *
             </label>
             <input
               type="number"
               placeholder="e.g. 24"
               {...register("age")}
-              className="w-full min-h-[44px] sm:min-h-[48px] px-3.5 sm:px-4 rounded-xl sm:rounded-[14px] border border-[#ECECEC] bg-[#FAFAFA] text-[#1F2937] placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#123E25] focus:bg-white focus:shadow-[0_0_12px_rgba(18,62,37,0.12)] transition-all duration-200 font-body text-xs sm:text-sm"
+              className={`w-full min-h-[44px] sm:min-h-[48px] px-3.5 sm:px-4 rounded-xl sm:rounded-[14px] border bg-[#FAFAFA] text-[#1F2937] placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#123E25] focus:bg-white focus:shadow-[0_0_12px_rgba(18,62,37,0.12)] transition-all duration-200 font-body text-xs sm:text-sm ${
+                errors.age ? "border-red-400" : "border-[#ECECEC]"
+              }`}
             />
+            {errors.age && (
+              <span className="font-body text-[10px] text-red-500 pl-0.5">{errors.age.message}</span>
+            )}
           </div>
         </div>
 
@@ -374,11 +379,11 @@ export default function ConsultationForm({
           </div>
         </div>
 
-        {/* Row 5: Birth Details (Optional) - Compact Collapsible grid */}
+        {/* Row 5: Birth Details */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
           <div className="flex flex-col gap-1 w-full min-w-0">
             <label className="font-body text-[10px] sm:text-[11px] font-medium text-[#4B5563]">
-              Date of Birth (Optional)
+              Date of Birth
             </label>
             <input
               type="date"
@@ -389,7 +394,7 @@ export default function ConsultationForm({
 
           <div className="flex flex-col gap-1 w-full min-w-0">
             <label className="font-body text-[10px] sm:text-[11px] font-medium text-[#4B5563]">
-              Birth Time (Optional)
+              Birth Time
             </label>
             <input
               type="time"
@@ -400,7 +405,7 @@ export default function ConsultationForm({
 
           <div className="flex flex-col gap-1 w-full min-w-0">
             <label className="font-body text-[10px] sm:text-[11px] font-medium text-[#4B5563]">
-              Birth Place (Optional)
+              Birth Place
             </label>
             <input
               type="text"
@@ -414,7 +419,7 @@ export default function ConsultationForm({
         {/* Row 6: Message */}
         <div className="flex flex-col gap-1 w-full min-w-0">
           <label className="font-body text-[11px] sm:text-xs font-semibold text-[#1F2937]">
-            Message
+            Notes / Additional Message (Optional)
           </label>
           <textarea
             placeholder="Brief description of primary challenges..."

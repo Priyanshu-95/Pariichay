@@ -10,21 +10,23 @@ export default function LoadingScreen() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const handleComplete = () => {
-      setProgress(100);
-      setTimeout(() => setLoading(false), 150);
+    let frameId: number;
+    const start = performance.now();
+    const duration = 250;
+
+    const step = (now: number) => {
+      const elapsed = now - start;
+      const pct = Math.min(100, Math.floor((elapsed / duration) * 100));
+      setProgress(pct);
+      if (pct < 100) {
+        frameId = requestAnimationFrame(step);
+      } else {
+        setTimeout(() => setLoading(false), 100);
+      }
     };
 
-    if (document.readyState === "complete") {
-      handleComplete();
-    } else {
-      window.addEventListener("load", handleComplete);
-      const timer = setTimeout(handleComplete, 300); // Fallback timeout
-      return () => {
-        window.removeEventListener("load", handleComplete);
-        clearTimeout(timer);
-      };
-    }
+    frameId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frameId);
   }, []);
 
   return (

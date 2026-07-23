@@ -30,6 +30,12 @@ export async function POST(request: Request) {
     if (!phoneNumber) {
       return NextResponse.json({ success: false, message: "Phone Number is required." }, { status: 400 });
     }
+    if (!emailAddress) {
+      return NextResponse.json({ success: false, message: "Email Address is required." }, { status: 400 });
+    }
+    if (!age) {
+      return NextResponse.json({ success: false, message: "Age is required." }, { status: 400 });
+    }
     if (!counsellingType) {
       return NextResponse.json({ success: false, message: "Counselling Type is required." }, { status: 400 });
     }
