@@ -29,7 +29,7 @@ export default function CallToAction() {
           </div>
 
           <button
-            onClick={openModal}
+            onClick={() => openModal()}
             className="px-10 py-4.5 bg-gradient-to-r from-[#C89B3C] to-[#E5C16A] text-[#0B2014] rounded-full font-body text-sm font-semibold tracking-wide shadow-md hover:shadow-[0_0_25px_rgba(204,153,51,0.4)] hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 border-none cursor-pointer shrink-0"
           >
             Schedule Free Consultation <ArrowRight className="w-4 h-4" />

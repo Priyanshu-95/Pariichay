@@ -174,7 +174,7 @@ function ClientGroupCard({ group, idx, isInView }: CardProps) {
 
 export default function WhoWeHelp({ preview = false }: { preview?: boolean }) {
   const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const isInView = useInView(containerRef, { once: true, margin: "0px 0px 100px 0px" });
   const [viewMode, setViewMode] = useState<"detailed" | "quick">("detailed");
 
   const filteredGroups = preview ? clientGroups.slice(0, 4) : clientGroups;

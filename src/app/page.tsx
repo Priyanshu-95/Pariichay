@@ -1,10 +1,28 @@
+import dynamic from "next/dynamic";
 import Hero from "@/components/Hero";
 import MarqueeSection from "@/components/MarqueeSection";
-import About from "@/components/About";
-import Services from "@/components/Services";
-import WhoWeHelp from "@/components/WhoWeHelp";
-import WhyChooseUs from "@/components/WhyChooseUs";
-import Testimonials from "@/components/Testimonials";
+import SectionSkeleton from "@/components/SectionSkeleton";
+
+// Dynamic progressive loading for below-the-fold sections
+const About = dynamic(() => import("@/components/About"), {
+  loading: () => <SectionSkeleton title="About Pariichay" height="h-[450px]" />,
+});
+
+const Services = dynamic(() => import("@/components/Services"), {
+  loading: () => <SectionSkeleton title="Counselling Offerings" height="h-[500px]" />,
+});
+
+const WhoWeHelp = dynamic(() => import("@/components/WhoWeHelp"), {
+  loading: () => <SectionSkeleton title="Who We Help" height="h-[450px]" />,
+});
+
+const WhyChooseUs = dynamic(() => import("@/components/WhyChooseUs"), {
+  loading: () => <SectionSkeleton title="Why Choose Us" height="h-[400px]" />,
+});
+
+const Testimonials = dynamic(() => import("@/components/Testimonials"), {
+  loading: () => <SectionSkeleton title="Client Reviews" height="h-[400px]" />,
+});
 
 export default function Home() {
   return (

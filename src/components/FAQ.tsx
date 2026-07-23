@@ -82,7 +82,7 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const [searchQuery, setSearchQuery] = useState("");
   const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const isInView = useInView(containerRef, { once: true, margin: "0px 0px 100px 0px" });
 
   const handleToggle = (idx: number) => {
     setOpenIndex(openIndex === idx ? null : idx);

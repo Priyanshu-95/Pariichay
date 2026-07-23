@@ -10,20 +10,21 @@ export default function LoadingScreen() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Simulate initial asset loading progress
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setTimeout(() => setLoading(false), 600); // Small delay for smooth exit
-          return 100;
-        }
-        const step = Math.floor(Math.random() * 15) + 5;
-        return Math.min(prev + step, 100);
-      });
-    }, 80);
+    const handleComplete = () => {
+      setProgress(100);
+      setTimeout(() => setLoading(false), 150);
+    };
 
-    return () => clearInterval(interval);
+    if (document.readyState === "complete") {
+      handleComplete();
+    } else {
+      window.addEventListener("load", handleComplete);
+      const timer = setTimeout(handleComplete, 300); // Fallback timeout
+      return () => {
+        window.removeEventListener("load", handleComplete);
+        clearTimeout(timer);
+      };
+    }
   }, []);
 
   return (
@@ -92,7 +93,7 @@ export default function LoadingScreen() {
                 />
               </div>
               <div className="flex justify-between items-center mt-3 text-xs tracking-wider text-muted-text font-body">
-                <span>PREMIUM GUIDANCE</span>
+                <span>CLARITY TODAY, SUCCESS TOMORROW</span>
                 <span className="font-semibold text-luxury-gold">{progress}%</span>
               </div>
             </div>

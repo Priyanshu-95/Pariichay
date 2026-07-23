@@ -4,7 +4,8 @@ import React, { createContext, useContext, useState } from "react";
 
 interface BookingModalContextType {
   isOpen: boolean;
-  openModal: () => void;
+  selectedService?: string;
+  openModal: (serviceName?: string) => void;
   closeModal: () => void;
 }
 
@@ -12,11 +13,20 @@ const BookingModalContext = createContext<BookingModalContextType | undefined>(u
 
 export function BookingModalProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const [selectedService, setSelectedService] = useState<string | undefined>(undefined);
+
+  const openModal = (serviceName?: string) => {
+    setSelectedService(serviceName);
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setSelectedService(undefined);
+  };
 
   return (
-    <BookingModalContext.Provider value={{ isOpen, openModal, closeModal }}>
+    <BookingModalContext.Provider value={{ isOpen, selectedService, openModal, closeModal }}>
       {children}
     </BookingModalContext.Provider>
   );

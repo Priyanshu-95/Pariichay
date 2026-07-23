@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { 
   HeartHandshake, 
   Compass, 
@@ -20,7 +20,8 @@ import {
   Users, 
   Briefcase,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  X
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -184,16 +185,39 @@ const services = [
   }
 ];
 
-
 export default function Services({ preview = false }: { preview?: boolean }) {
   const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const isInView = useInView(containerRef, { once: true, margin: "0px 0px 100px 0px" });
   const [activeFilter, setActiveFilter] = useState("all");
   const [viewMode, setViewMode] = useState<"detailed" | "quick">("detailed");
+  const [activeDetailService, setActiveDetailService] = useState<typeof services[0] | null>(null);
   const { openModal } = useBookingModal();
 
+  // Lock body scroll when detail popup is open
+  useEffect(() => {
+    if (activeDetailService) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [activeDetailService]);
+
+  // Handle Escape key to close detail popup
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && activeDetailService) {
+        setActiveDetailService(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeDetailService]);
+
   const filteredServices = preview
-    ? services.slice(0, 3) // Show top 3 services in preview mode to align perfectly with the 3-column grid
+    ? services.slice(0, 3)
     : activeFilter === "all" 
       ? services 
       : services.filter(s => s.category === activeFilter);
@@ -260,7 +284,9 @@ export default function Services({ preview = false }: { preview?: boolean }) {
             {filterButtons.map((btn) => (
               <button
                 key={btn.id}
-                onClick={() => setActiveFilter(btn.id)}
+                onClick={() => {
+                  setActiveFilter(btn.id);
+                }}
                 className={`px-5 py-2.5 rounded-full font-body text-xs font-semibold tracking-wider transition-all duration-300 ${
                   activeFilter === btn.id
                     ? "bg-premium-teal text-white shadow-md shadow-premium-teal/15"
@@ -298,7 +324,6 @@ export default function Services({ preview = false }: { preview?: boolean }) {
                       {/* FRONT FACE */}
                       <div className="absolute inset-0 w-full h-full rounded-[24px] overflow-hidden backface-hidden shadow-md group-hover:shadow-xl transition-shadow duration-500 border border-white/10 flex flex-col justify-end z-10 group-hover:z-0 group-hover:pointer-events-none">
                         
-                        {/* Background Image using next/image */}
                         <div className="absolute inset-0 w-full h-full z-0">
                           {service.image && (
                             <Image
@@ -310,11 +335,9 @@ export default function Services({ preview = false }: { preview?: boolean }) {
                               placeholder="blur"
                             />
                           )}
-                          {/* Premium Dark Gradient Overlay */}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/10 z-10" />
                         </div>
 
-                        {/* Content on front */}
                         <div className="relative z-20 p-8 flex flex-col gap-2">
                           <span className="font-body text-[10px] font-semibold text-[#E5C16A] uppercase tracking-wider">
                             {service.category}
@@ -330,10 +353,9 @@ export default function Services({ preview = false }: { preview?: boolean }) {
 
                       {/* BACK FACE */}
                       <div 
-                        onClick={() => openModal()}
+                        onClick={() => openModal(service.title)}
                         className="absolute inset-0 w-full h-full rounded-[24px] overflow-hidden backface-hidden rotate-y-180 bg-gradient-to-b from-[#22444b] to-[#112226] border border-luxury-gold/25 p-8 flex flex-col justify-between shadow-xl cursor-pointer z-0 group-hover:z-20 group-hover:pointer-events-auto"
                       >
-                        {/* Background luxury gradient mesh */}
                         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(216,154,60,0.06),transparent_60%)] pointer-events-none" />
                         <div className="absolute top-4 right-4 w-24 h-24 bg-luxury-gold/5 blur-2xl rounded-full pointer-events-none" />
 
@@ -358,9 +380,9 @@ export default function Services({ preview = false }: { preview?: boolean }) {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              openModal();
+                              openModal(service.title);
                             }}
-                            className="font-body text-xs font-bold text-white hover:text-white/80 flex items-center gap-1.5 transition-colors duration-300 bg-transparent border-none cursor-pointer group/btn"
+                            className="font-body text-xs font-bold text-white hover:text-white/80 flex items-center gap-1.5 transition-colors duration-300 bg-transparent border-none cursor-pointer group/btn min-h-[44px]"
                           >
                             Book Now <ArrowRight className="w-3.5 h-3.5 transform transition-transform duration-300 group-hover/btn:translate-x-1" />
                           </button>
@@ -376,88 +398,98 @@ export default function Services({ preview = false }: { preview?: boolean }) {
               })}
             </motion.div>
 
-            {/* Mobile/Tablet Compact Card Grid (2-columns on mobile, no flipping, direct CTAs) */}
+            {/* Mobile Card Grid (Compact & Uniform Cards; Tapping opens full Service Details Popup) */}
             <motion.div 
               layout
-              className="grid grid-cols-2 md:hidden gap-4"
+              className="grid grid-cols-2 sm:grid-cols-2 md:hidden gap-3.5 sm:gap-4"
             >
               {filteredServices.map((service, idx) => {
                 return (
                   <motion.div
                     layout
                     key={`mobile-card-${service.title}-${idx}`}
-                    initial={{ opacity: 0, scale: 0.95 }}
+                    initial={{ opacity: 0, scale: 0.96 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: idx * 0.03, duration: 0.4 }}
-                    className="w-full rounded-[18px] border border-deep-brown/5 shadow-[0_4px_12px_rgba(106,74,43,0.03)] flex flex-col bg-white overflow-hidden"
+                    transition={{ delay: idx * 0.03, duration: 0.35 }}
+                    onClick={() => setActiveDetailService(service)}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`View details for ${service.title}`}
+                    className="w-full rounded-[20px] border border-deep-brown/8 shadow-[0_4px_16px_rgba(106,74,43,0.04)] hover:border-luxury-gold/30 flex flex-col bg-white overflow-hidden cursor-pointer select-none transition-all duration-300 hover:shadow-md"
                   >
                     {/* Top Image */}
-                    <div className="h-24 sm:h-28 w-full relative">
+                    <div className="h-24 sm:h-28 w-full relative shrink-0">
                       {service.image && (
                         <Image
                           src={service.image}
                           alt={service.title}
                           fill
-                          sizes="50vw"
+                          sizes="(max-width: 768px) 50vw, 33vw"
                           className="object-cover"
                           placeholder="blur"
                         />
                       )}
-                      {/* Dark gradient overlay for title contrast on images */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent z-10" />
-                      <span className="absolute bottom-2 left-2 z-20 font-body text-[8px] font-bold text-[#E5C16A] uppercase bg-black/50 px-1.5 py-0.5 rounded leading-none">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent z-10" />
+                      <span className="absolute bottom-2 left-2 z-20 font-body text-[9px] font-bold text-[#E5C16A] uppercase bg-black/60 px-1.5 py-0.5 rounded leading-none backdrop-blur-sm">
                         {service.duration}
                       </span>
                     </div>
-                    {/* Bottom details */}
-                    <div className="p-3 flex-grow flex flex-col justify-between">
-                      <div className="flex-grow">
-                        <span className="font-body text-[8px] font-semibold text-luxury-gold uppercase tracking-wider block">
+
+                    {/* Bottom Details */}
+                    <div className="p-3.5 flex-grow flex flex-col justify-between gap-2.5">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="font-body text-[8px] sm:text-[9px] font-semibold text-luxury-gold uppercase tracking-wider block">
                           {service.category}
                         </span>
-                        <h4 className="font-headings text-[12px] font-bold text-deep-brown line-clamp-1 mt-0.5 leading-snug">
+                        <h4 className="font-headings text-xs sm:text-sm font-bold text-deep-brown line-clamp-1 leading-snug">
                           {service.title}
                         </h4>
                         <p className="font-body text-[10px] text-muted-text line-clamp-2 mt-0.5 leading-normal">
                           {service.desc}
                         </p>
                       </div>
+
+                      {/* Direct Book Now Button */}
                       <button
-                        onClick={() => openModal()}
-                        className="w-full py-1.5 mt-2.5 rounded-lg bg-premium-teal hover:bg-premium-teal/90 text-white font-body text-[9px] font-semibold text-center transition-all cursor-pointer border-none shadow-sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openModal(service.title);
+                        }}
+                        className="w-full min-h-[38px] py-1.5 rounded-lg bg-premium-teal hover:bg-premium-teal/90 text-white font-body text-[10px] sm:text-xs font-semibold tracking-wide text-center transition-all cursor-pointer border-none shadow-xs active:scale-[0.98] flex items-center justify-center gap-1"
                       >
-                        Book Now
+                        <span>Book Now</span>
+                        <ArrowRight className="w-3 h-3" />
                       </button>
                     </div>
                   </motion.div>
                 );
               })}
 
-              {/* Option A: Explore All Services CTA Card (visible on mobile/tablet in preview mode only) */}
+              {/* Explore All Offerings Card in preview mode on mobile */}
               {preview && (
                 <motion.div
                   layout
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.12, duration: 0.4 }}
-                  className="w-full rounded-[18px] border border-luxury-gold/30 shadow-[0_4px_12px_rgba(106,74,43,0.05)] flex flex-col justify-between bg-gradient-to-b from-[#22444b] to-[#112226] overflow-hidden p-3 min-h-[220px]"
+                  className="w-full rounded-[20px] border border-luxury-gold/30 shadow-[0_4px_16px_rgba(106,74,43,0.06)] flex flex-col justify-between bg-gradient-to-b from-[#22444b] to-[#112226] overflow-hidden p-4 min-h-[190px]"
                 >
-                  <div className="flex flex-col gap-1.5 flex-grow justify-center text-center p-1.5">
-                    <div className="w-9 h-9 rounded-full bg-[#E5C16A]/15 text-[#E5C16A] flex items-center justify-center border border-[#E5C16A]/25 mx-auto mb-1.5 shrink-0 animate-pulse">
-                      <Sparkles className="w-4.5 h-4.5" />
+                  <div className="flex flex-col gap-1.5 flex-grow justify-center text-center p-1">
+                    <div className="w-8 h-8 rounded-full bg-[#E5C16A]/15 text-[#E5C16A] flex items-center justify-center border border-[#E5C16A]/25 mx-auto mb-1 shrink-0 animate-pulse">
+                      <Sparkles className="w-4 h-4" />
                     </div>
-                    <h4 className="font-headings text-[12px] font-bold text-white leading-tight">
+                    <h4 className="font-headings text-xs sm:text-sm font-bold text-white leading-tight">
                       Explore All Offerings
                     </h4>
                     <p className="font-body text-[9px] text-white/80 leading-normal line-clamp-2">
-                      Discover our complete range of scientific & Vedic programs.
+                      Discover our complete range of programs.
                     </p>
                   </div>
                   <Link
                     href="/services"
-                    className="w-full py-2 rounded-lg bg-luxury-gold hover:bg-luxury-gold/90 text-white font-body text-[9px] font-bold text-center transition-all cursor-pointer border-none shadow-sm flex items-center justify-center gap-1"
+                    className="w-full min-h-[38px] py-2 rounded-lg bg-luxury-gold hover:bg-luxury-gold/90 text-white font-body text-[10px] sm:text-xs font-bold text-center transition-all cursor-pointer border-none shadow-xs flex items-center justify-center gap-1"
                   >
-                    <span>View Services</span>
+                    <span>View Directory</span>
                     <ArrowRight className="w-3 h-3" />
                   </Link>
                 </motion.div>
@@ -476,35 +508,35 @@ export default function Services({ preview = false }: { preview?: boolean }) {
                 <motion.div
                   layout
                   key={`quick-card-${service.title}-${idx}`}
-                  onClick={() => openModal()}
-                  className="rounded-2xl border border-deep-brown/5 bg-white p-4 flex flex-col justify-between min-h-[110px] hover:border-luxury-gold/30 hover:shadow-sm transition-all duration-300 cursor-pointer select-none group"
+                  onClick={() => openModal(service.title)}
+                  className="rounded-2xl border border-deep-brown/5 bg-white p-4 flex flex-col justify-between min-h-[120px] hover:border-luxury-gold/30 hover:shadow-sm transition-all duration-300 cursor-pointer select-none group min-h-[44px]"
                 >
                   <div className="flex items-center justify-between w-full">
                     <div className="w-8 h-8 rounded-lg bg-luxury-gold/10 text-luxury-gold flex items-center justify-center border border-luxury-gold/20 group-hover:bg-premium-teal/10 group-hover:text-premium-teal group-hover:border-premium-teal/20 transition-colors">
                       <Icon className="w-4 h-4" />
                     </div>
-                    <span className="font-body text-[8px] font-semibold text-muted-text uppercase">
+                    <span className="font-body text-[9px] font-semibold text-muted-text uppercase">
                       {service.duration}
                     </span>
                   </div>
                   <div className="mt-3">
-                    <h4 className="font-headings text-xs font-bold text-deep-brown leading-snug line-clamp-2 group-hover:text-luxury-gold transition-colors">
+                    <h4 className="font-headings text-xs sm:text-sm font-bold text-deep-brown leading-snug line-clamp-2 group-hover:text-luxury-gold transition-colors">
                       {service.title}
                     </h4>
-                    <div className="flex items-center gap-1 font-body text-[8px] font-semibold text-premium-teal mt-1">
+                    <div className="flex items-center gap-1 font-body text-[9px] font-semibold text-premium-teal mt-1">
                       <span>Book Now</span>
-                      <ArrowRight className="w-2.5 h-2.5 transform group-hover:translate-x-0.5 transition-transform" />
+                      <ArrowRight className="w-3 h-3 transform group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
                 </motion.div>
               );
             })}
 
-            {/* Quick View CTA Chip (visible in preview mode only, maintains row symmetry) */}
+            {/* Quick View CTA Chip */}
             {preview && (
               <Link
                 href="/services"
-                className="rounded-2xl border border-luxury-gold/30 bg-gradient-to-r from-[#22444b] to-[#112226] p-4 flex flex-col justify-between min-h-[110px] hover:shadow-md transition-all duration-300 cursor-pointer select-none group"
+                className="rounded-2xl border border-luxury-gold/30 bg-gradient-to-r from-[#22444b] to-[#112226] p-4 flex flex-col justify-between min-h-[120px] hover:shadow-md transition-all duration-300 cursor-pointer select-none group"
               >
                 <div className="flex items-center justify-between w-full">
                   <div className="w-8 h-8 rounded-lg bg-[#E5C16A]/15 text-[#E5C16A] flex items-center justify-center border border-[#E5C16A]/25">
@@ -513,10 +545,10 @@ export default function Services({ preview = false }: { preview?: boolean }) {
                   <ArrowRight className="w-4 h-4 text-[#E5C16A] transform group-hover:translate-x-0.5 transition-transform" />
                 </div>
                 <div className="mt-3">
-                  <h4 className="font-headings text-xs font-bold text-white leading-snug">
+                  <h4 className="font-headings text-xs sm:text-sm font-bold text-white leading-snug">
                     View All Offerings
                   </h4>
-                  <span className="font-body text-[8px] font-semibold text-[#E5C16A] block mt-0.5 uppercase tracking-wide">
+                  <span className="font-body text-[9px] font-semibold text-[#E5C16A] block mt-0.5 uppercase tracking-wide">
                     Explore 15+ Services
                   </span>
                 </div>
@@ -530,14 +562,137 @@ export default function Services({ preview = false }: { preview?: boolean }) {
           <div className="hidden md:flex justify-center mt-16">
             <Link
               href="/services"
-              className="px-8 py-3.5 btn-gold font-body text-sm font-semibold tracking-wide flex items-center gap-2"
+              className="px-8 py-3.5 btn-gold font-body text-sm font-semibold tracking-wide flex items-center gap-2 min-h-[44px]"
             >
-              Explore All Services & Offerings <ArrowRight className="w-4 h-4" />
+              Explore All Services &amp; Offerings <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         )}
 
       </div>
+
+      {/* Service Details Modal Popup (Opened when tapping a mobile service card) */}
+      <AnimatePresence>
+        {activeDetailService && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-x-hidden overflow-y-auto">
+            {/* Dark Semi-transparent Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={() => setActiveDetailService(null)}
+              className="fixed inset-0 bg-black/65 backdrop-blur-sm cursor-pointer"
+              aria-hidden="true"
+            />
+
+            {/* Popup Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="relative w-[min(92vw,540px)] max-h-[88vh] sm:max-h-[90vh] bg-white rounded-[24px] shadow-2xl border border-deep-brown/10 overflow-hidden flex flex-col z-10"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="service-modal-title"
+            >
+              {/* Top Service Image Banner */}
+              <div className="relative h-44 sm:h-52 w-full shrink-0 overflow-hidden bg-deep-brown/5">
+                {activeDetailService.image && (
+                  <Image
+                    src={activeDetailService.image}
+                    alt={activeDetailService.title}
+                    fill
+                    sizes="(max-width: 640px) 92vw, 540px"
+                    className="object-cover"
+                    placeholder="blur"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
+
+                {/* Close (×) Button */}
+                <button
+                  onClick={() => setActiveDetailService(null)}
+                  className="absolute top-3.5 right-3.5 z-30 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center backdrop-blur-md transition-all border border-white/20 cursor-pointer"
+                  aria-label="Close details"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+
+                {/* Badges on Image Banner */}
+                <div className="absolute bottom-3.5 left-4 right-4 z-20 flex items-center justify-between gap-2">
+                  <span className="font-body text-xs font-bold text-[#E5C16A] uppercase bg-black/60 px-3 py-1 rounded-lg backdrop-blur-md border border-[#E5C16A]/30">
+                    ⏱ {activeDetailService.duration}
+                  </span>
+                  <span className="font-body text-xs font-semibold text-white/90 uppercase bg-white/20 px-3 py-1 rounded-lg backdrop-blur-md border border-white/20 tracking-wider">
+                    {activeDetailService.category}
+                  </span>
+                </div>
+              </div>
+
+              {/* Scrollable Content Body inside Modal */}
+              <div className="p-5 sm:p-7 flex-grow overflow-y-auto custom-scrollbar flex flex-col gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <span className="font-body text-xs font-semibold text-luxury-gold uppercase tracking-widest">
+                    Service Overview
+                  </span>
+                  <h3 id="service-modal-title" className="font-headings text-xl sm:text-2xl font-bold text-deep-brown leading-tight">
+                    {activeDetailService.title}
+                  </h3>
+                </div>
+
+                <div className="h-px w-full bg-deep-brown/8" />
+
+                {/* Full Un-truncated Description */}
+                <div className="flex flex-col gap-3 font-body text-xs sm:text-sm text-body-text/90 leading-[1.7]">
+                  <p>{activeDetailService.desc}</p>
+                </div>
+
+                {/* Service Inclusion Highlights Box */}
+                <div className="bg-[#FCFAF7] rounded-2xl p-4 border border-deep-brown/8 flex flex-col gap-2.5 mt-2">
+                  <span className="font-headings text-xs font-bold text-deep-brown uppercase tracking-wider">
+                    Session Highlights
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-body text-xs text-muted-text">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#124E2F] font-bold">✔</span>
+                      <span>Personalized Consultation</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#124E2F] font-bold">✔</span>
+                      <span>Scientific &amp; Vedic Diagnostic</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#124E2F] font-bold">✔</span>
+                      <span>Comprehensive Action Plan</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#124E2F] font-bold">✔</span>
+                      <span>Post-Session Support</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Fixed Footer CTA Button */}
+              <div className="p-4 sm:p-5 bg-white border-t border-deep-brown/8 flex items-center justify-between gap-4 shrink-0">
+                <button
+                  onClick={() => {
+                    const title = activeDetailService.title;
+                    setActiveDetailService(null);
+                    openModal(title);
+                  }}
+                  className="w-full min-h-[44px] py-3 rounded-xl bg-gradient-to-r from-premium-teal to-[#123E25] hover:from-[#123E25] hover:to-premium-teal text-white font-body text-xs sm:text-sm font-semibold tracking-wide text-center transition-all cursor-pointer border-none shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                >
+                  <span>Book This Service Now</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

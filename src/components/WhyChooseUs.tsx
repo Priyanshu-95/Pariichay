@@ -66,7 +66,7 @@ const reasons = [
 
 export default function WhyChooseUs({ preview = false }: { preview?: boolean }) {
   const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const isInView = useInView(containerRef, { once: true, margin: "0px 0px 100px 0px" });
 
   const filteredReasons = preview ? reasons.slice(0, 6) : reasons;
 

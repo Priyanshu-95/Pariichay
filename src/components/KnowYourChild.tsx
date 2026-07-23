@@ -96,7 +96,7 @@ const childDimensions = [
 
 export default function KnowYourChild() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const isInView = useInView(containerRef, { once: true, margin: "0px 0px 100px 0px" });
   const { openModal } = useBookingModal();
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -180,7 +180,7 @@ export default function KnowYourChild() {
             {/* CTA */}
             <div className="mt-8 flex">
               <button
-                onClick={openModal}
+                onClick={() => openModal("Know Your Child Assessment")}
                 className="px-8 py-3.5 btn-gold font-body text-sm font-semibold tracking-wide flex items-center gap-2 border-none cursor-pointer shadow-sm hover:shadow"
               >
                 Book Child Assessment <ArrowRight className="w-4 h-4" />

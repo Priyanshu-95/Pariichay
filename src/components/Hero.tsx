@@ -16,7 +16,7 @@ export default function Hero() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIntroDone(true);
-    }, 1200);
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
 
@@ -120,7 +120,7 @@ export default function Hero() {
               className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-8"
             >
               <button
-                onClick={openModal}
+                onClick={() => openModal()}
                 className="px-8 py-3.5 btn-gold font-body text-sm font-semibold tracking-wide flex items-center justify-center gap-2 border-none cursor-pointer"
               >
                 Book Consultation <ArrowRight className="w-4 h-4" />
@@ -199,7 +199,10 @@ export default function Hero() {
             <img 
               src="/logo.png" 
               alt="Pariichay Logo" 
-              className="object-contain filter drop-shadow-[0_4px_16px_rgba(106,74,43,0.02)]"
+              loading="eager"
+              // @ts-ignore
+              fetchPriority="high"
+              className="object-contain filter drop-shadow-[0_4px_16px_rgba(106,74,43,0.02)] shrink-0"
               style={{
                 width: 'clamp(180px, 22vw, 340px)',
                 height: 'auto',

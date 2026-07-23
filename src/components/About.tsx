@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { Target, Eye, Compass, Award, ArrowRight } from "lucide-react";
+import { Target, Eye, Compass, Award, ArrowRight, GraduationCap, Briefcase, Check } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -16,7 +16,7 @@ import imgPhilosophy from "@/assets/Philosophy.png";
 function Counter({ value, suffix = "" }: { value: number; suffix?: string }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "0px 0px 100px 0px" });
 
   useEffect(() => {
     if (isInView) {
@@ -51,7 +51,7 @@ function Counter({ value, suffix = "" }: { value: number; suffix?: string }) {
 
 export default function About({ preview = false }: { preview?: boolean }) {
   const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const isInView = useInView(containerRef, { once: true, margin: "0px 0px 100px 0px" });
 
   const textVariants = {
     hidden: { opacity: 0, y: 30 },
@@ -117,12 +117,7 @@ export default function About({ preview = false }: { preview?: boolean }) {
                 animate={isInView ? "visible" : "hidden"}
                 className="font-body text-base sm:text-lg text-body-text/90 leading-relaxed"
               >
-                <p className="mb-6">
-                  <strong>Pariichay</strong> means introduction—the introduction to your own true self. We believe that every individual holds a unique energetic blueprint. By merging contemporary <strong>cognitive psychology</strong> and scientific assessment matrices with the profound observations of <strong>Vedic sciences</strong>, we help you trace that blueprint.
-                </p>
-                <p>
-                  Founded on the values of professional integrity, deep emotional safety, and scientific precision, our custom counselling pathways offer clarity for career growth, parenting struggles, and personal development.
-                </p>
+                
               </motion.div>
               <div className="flex mt-4">
                 <Link
@@ -140,7 +135,7 @@ export default function About({ preview = false }: { preview?: boolean }) {
                   <Award className="w-8 h-8 text-luxury-gold animate-bounce duration-[3000ms]" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-headings text-2xl font-black text-premium-teal">15+ Years</span>
+                  <span className="font-headings text-2xl font-black text-premium-teal">10+ Years</span>
                   <span className="font-body text-xs font-semibold text-luxury-gold tracking-widest uppercase mt-1">
                     Counselling Experience
                   </span>
@@ -166,58 +161,74 @@ export default function About({ preview = false }: { preview?: boolean }) {
                   className="font-body text-base sm:text-lg text-body-text/90 leading-relaxed"
                 >
                   <p className="mb-6">
-                    <strong>Pariichay</strong> means introduction—the introduction to your own true self. We believe that every individual holds a unique energetic blueprint. By merging contemporary <strong>cognitive psychology</strong> and scientific assessment matrices with the profound observations of <strong>Vedic sciences</strong>, we help you trace that blueprint.
-                  </p>
-                  <p>
-                    Founded on the values of professional integrity, deep emotional safety, and scientific precision, our custom counselling pathways offer clarity for career growth, parenting struggles, and personal development.
-                  </p>
+  Pariichay believes every individual possesses unique strengths, untapped potential, and the ability to create a meaningful life with the right guidance. Our counselling approach combines scientific psychology, practical coaching methodologies, and holistic human development to help individuals gain clarity, confidence, and direction.
+</p>
+<p className="mb-6">
+  Whether you are a student choosing a career, a parent seeking better understanding, or a professional navigating life decisions, our goal is to provide structured guidance through evidence-based assessments and years of practical experience.
+</p>
+<p>
+  At Pariichay, we focus on empowering individuals with personalized counselling that supports career growth, emotional wellbeing, parenting, personality development, and lifelong success.
+</p>
                 </motion.div>
               </div>
 
               {/* Right Column: Founder Profile & Animated Experience Timeline */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.8 }}
-                className="glass-card rounded-[32px] p-8 md:p-10 border border-white/60 shadow-md relative"
-              >
-                {/* Visual Header */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-8 border-b border-deep-brown/5 pb-8">
-                  <div className="relative w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-tr from-luxury-gold to-premium-teal flex items-center justify-center text-white font-headings text-3xl font-bold shadow-md">
-                    <span>JP</span>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="font-headings text-xl font-bold text-deep-brown">Jignesh Prajapati</span>
-                    <span className="font-body text-xs text-luxury-gold uppercase tracking-wider font-semibold mt-1">
-                      Founder & Senior Advisor
-                    </span>
-                    <span className="font-body text-xs text-muted-text mt-1">
-                      MA Psychology, Certified Vedic Astrologer & DMIT Expert
-                    </span>
-                  </div>
-                </div>
-
-                {/* Experience Timeline */}
-                <h4 className="font-headings text-lg font-bold text-deep-brown mb-6 flex items-center gap-2">
-                  <Award className="w-5 h-5 text-luxury-gold" /> Founder's Journey
-                </h4>
-                <div className="space-y-6 relative before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[1.5px] before:bg-luxury-gold/20 font-body text-sm text-body-text/95">
-                  {[
-                    { year: "2010", title: "Roots in Child Psychology", desc: "Started as an academic counselor focusing on neurodivergent learning patterns." },
-                    { year: "2015", title: "Integrating Vedic Sciences", desc: "Completed formal research in Vedic planetary patterns affecting human behavior." },
-                    { year: "2020", title: "Birth of Pariichay", desc: "Launched unified 360° solutions, incorporating biometric and psychometric tools." },
-                  ].map((milestone, idx) => (
-                    <div key={idx} className="relative pl-8">
-                      <div className="absolute left-0 top-1.5 w-6 h-6 rounded-full bg-white border-2 border-luxury-gold flex items-center justify-center z-10">
-                        <div className="w-2 h-2 rounded-full bg-premium-teal" />
-                      </div>
-                      <span className="font-body text-xs font-semibold text-luxury-gold">{milestone.year}</span>
-                      <h5 className="font-headings text-sm font-bold text-deep-brown mt-0.5">{milestone.title}</h5>
-                      <p className="font-body text-xs text-muted-text mt-1 leading-relaxed">{milestone.desc}</p>
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ duration: 0.8 }}
+                  className="glass-card rounded-[32px] p-8 md:p-10 border border-white/60 shadow-md relative"
+                >
+                  {/* Visual Header */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-8 border-b border-deep-brown/5 pb-8">
+                    <div className="relative w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-tr from-luxury-gold to-premium-teal flex items-center justify-center text-white font-headings text-3xl font-bold shadow-md">
+                      <span>JP</span>
                     </div>
-                  ))}
-                </div>
-              </motion.div>
+                    <div className="flex flex-col">
+                      <span className="font-headings text-xl font-bold text-deep-brown">Jignesh Prajapati</span>
+                      <span className="font-body text-xs text-luxury-gold uppercase tracking-wider font-semibold mt-1">
+                        Founder & Senior Advisor
+                      </span>
+                      <span className="font-body text-xs text-muted-text mt-1">
+                        MA Psychology, Certified Vedic Astrologer & DMIT Expert
+                      </span>
+                    </div>
+                  </div>
+                  {/* Professional Profile Cards */}
+                  <div className="grid grid-cols-1 gap-6">
+                    {/* Education Card */}
+                    <div className="relative bg-white border border-deep-brown/5 rounded-[18px] p-5 border-l-4 border-[#124E2F] hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                      <div className="flex items-center gap-3">
+                        <GraduationCap className="w-5 h-5 text-premium-teal" />
+                        <h4 className="font-headings text-lg font-bold text-deep-brown">Education</h4>
+                      </div>
+                      <p className="mt-2 text-sm text-muted-text">B.Com. &amp; B.Ed. (2005)</p>
+                    </div>
+                    {/* Career Coaching Card */}
+                    <div className="relative bg-white border border-deep-brown/5 rounded-[18px] p-5 border-l-4 border-[#124E2F] hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                      <div className="flex items-center gap-3">
+                        <Briefcase className="w-5 h-5 text-premium-teal" />
+                        <h4 className="font-headings text-lg font-bold text-deep-brown">Career Coaching</h4>
+                      </div>
+                      <p className="mt-2 text-sm text-muted-text">Started Professional Career Coaching<br/>Since 2016</p>
+                    </div>
+                    {/* Certifications Card */}
+                    <div className="relative bg-white border border-deep-brown/5 rounded-[18px] p-5 border-l-4 border-[#124E2F] hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                      <div className="flex items-center gap-3">
+                        <Check className="w-5 h-5 text-premium-teal" />
+                        <h4 className="font-headings text-lg font-bold text-deep-brown">Professional Certifications</h4>
+                      </div>
+                      <ul className="mt-2 space-y-1 text-sm text-muted-text">
+                        <li>✔ Bada Business – Dr. Vivek Bindra LTM Member (Jan 2022, 2023 & 2024)</li>
+                        <li>✔ Parenting Certification – Samanvay Group (May 2022)</li>
+                        <li>✔ NFNLP – National Federation of Neuro Linguistic Programming, Florida, USA (Dec 2021)</li>
+                        <li>✔ Astrology & Numerology – Jyotish Vidhyalaya, Ambala (Mentor: Anurag) (Nov 2021)</li>
+                        <li>✔ Life Changing Program – Sneh Desai (Jan 2021)</li>
+                        <li>✔ Mind Development – Dr. Jitendra (Dec 2020)</li>
+                      </ul>
+                    </div>
+                  </div>
+                </motion.div>
 
             </div>
 
@@ -277,10 +288,10 @@ export default function About({ preview = false }: { preview?: boolean }) {
             {/* Counter Statistics Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 border-t border-deep-brown/10 pt-10">
               {[
-                { value: 15, suffix: "+", label: "Years of Experience" },
-                { value: 5000, suffix: "+", label: "Happy Families" },
-                { value: 10000, suffix: "+", label: "Students Guided" },
-                { value: 25000, suffix: "+", label: "Scientific Assessments" },
+                { value: 10, suffix: "+", label: "Years of Experience" },
+                { value: 500, suffix: "+", label: "Happy Families" },
+                { value: 1000, suffix: "+", label: "Students Guided" },
+                { value: 1000, suffix: "+", label: "Scientific Assessments" },
               ].map((stat, idx) => (
                 <motion.div
                   key={idx}
