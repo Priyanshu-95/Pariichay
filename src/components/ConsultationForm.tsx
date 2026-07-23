@@ -254,10 +254,29 @@ export default function ConsultationForm({
           </div>
         </div>
 
-        {/* Row 2: Email & Age */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        {/* Row 2: WhatsApp Number & Email */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          {/* WhatsApp */}
+          <div className="flex flex-col gap-1 w-full min-w-0">
+            <label className="font-body text-[11px] sm:text-xs font-semibold text-[#1F2937] flex items-center gap-1">
+              <MessageSquare className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
+              WhatsApp Number *
+            </label>
+            <input
+              type="tel"
+              placeholder="e.g. 9876543210"
+              {...register("whatsapp")}
+              className={`w-full min-h-[44px] sm:min-h-[48px] px-3.5 sm:px-4 rounded-xl sm:rounded-[14px] border bg-[#FAFAFA] text-[#1F2937] placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#123E25] focus:bg-white focus:shadow-[0_0_12px_rgba(18,62,37,0.12)] transition-all duration-200 font-body text-xs sm:text-sm ${
+                errors.whatsapp ? "border-red-400" : "border-[#ECECEC]"
+              }`}
+            />
+            {errors.whatsapp && (
+              <span className="font-body text-[10px] text-red-500 pl-0.5">{errors.whatsapp.message}</span>
+            )}
+          </div>
+
           {/* Email */}
-          <div className="sm:col-span-2 flex flex-col gap-1 w-full min-w-0">
+          <div className="flex flex-col gap-1 w-full min-w-0">
             <label className="font-body text-[11px] sm:text-xs font-semibold text-[#1F2937] flex items-center gap-1">
               <Mail className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
               Email Address *
@@ -274,7 +293,10 @@ export default function ConsultationForm({
               <span className="font-body text-[10px] text-red-500 pl-0.5">{errors.email.message}</span>
             )}
           </div>
+        </div>
 
+        {/* Row 3: Age, Gender & City */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
           {/* Age */}
           <div className="flex flex-col gap-1 w-full min-w-0">
             <label className="font-body text-[11px] sm:text-xs font-semibold text-[#1F2937]">
@@ -292,9 +314,49 @@ export default function ConsultationForm({
               <span className="font-body text-[10px] text-red-500 pl-0.5">{errors.age.message}</span>
             )}
           </div>
+
+          {/* Gender */}
+          <div className="flex flex-col gap-1 w-full min-w-0">
+            <label className="font-body text-[11px] sm:text-xs font-semibold text-[#1F2937]">
+              Gender *
+            </label>
+            <select
+              {...register("gender")}
+              className={`w-full min-h-[44px] sm:min-h-[48px] px-3.5 sm:px-4 rounded-xl sm:rounded-[14px] border bg-[#FAFAFA] text-[#1F2937] focus:outline-none focus:border-[#123E25] focus:bg-white focus:shadow-[0_0_12px_rgba(18,62,37,0.12)] transition-all duration-200 font-body text-xs sm:text-sm ${
+                errors.gender ? "border-red-400" : "border-[#ECECEC]"
+              }`}
+            >
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            {errors.gender && (
+              <span className="font-body text-[10px] text-red-500 pl-0.5">{errors.gender.message}</span>
+            )}
+          </div>
+
+          {/* City */}
+          <div className="flex flex-col gap-1 w-full min-w-0">
+            <label className="font-body text-[11px] sm:text-xs font-semibold text-[#1F2937] flex items-center gap-1">
+              <MapPin className="w-3.5 h-3.5 text-luxury-gold shrink-0" />
+              City *
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. Ahmedabad"
+              {...register("city")}
+              className={`w-full min-h-[44px] sm:min-h-[48px] px-3.5 sm:px-4 rounded-xl sm:rounded-[14px] border bg-[#FAFAFA] text-[#1F2937] placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#123E25] focus:bg-white focus:shadow-[0_0_12px_rgba(18,62,37,0.12)] transition-all duration-200 font-body text-xs sm:text-sm ${
+                errors.city ? "border-red-400" : "border-[#ECECEC]"
+              }`}
+            />
+            {errors.city && (
+              <span className="font-body text-[10px] text-red-500 pl-0.5">{errors.city.message}</span>
+            )}
+          </div>
         </div>
 
-        {/* Row 3: Service Selection & Mode */}
+        {/* Row 4: Service Selection & Mode */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
           {/* Service */}
           <div className="sm:col-span-2 flex flex-col gap-1 w-full min-w-0">
@@ -326,15 +388,20 @@ export default function ConsultationForm({
             </label>
             <select
               {...register("mode")}
-              className="w-full min-h-[44px] sm:min-h-[48px] px-3.5 sm:px-4 rounded-xl sm:rounded-[14px] border border-[#ECECEC] bg-[#FAFAFA] text-[#1F2937] focus:outline-none focus:border-[#123E25] focus:bg-white focus:shadow-[0_0_12px_rgba(18,62,37,0.12)] transition-all duration-200 font-body text-xs sm:text-sm"
+              className={`w-full min-h-[44px] sm:min-h-[48px] px-3.5 sm:px-4 rounded-xl sm:rounded-[14px] border bg-[#FAFAFA] text-[#1F2937] focus:outline-none focus:border-[#123E25] focus:bg-white focus:shadow-[0_0_12px_rgba(18,62,37,0.12)] transition-all duration-200 font-body text-xs sm:text-sm ${
+                errors.mode ? "border-red-400" : "border-[#ECECEC]"
+              }`}
             >
               <option value="Online">Online</option>
               <option value="Offline">Offline Clinic</option>
             </select>
+            {errors.mode && (
+              <span className="font-body text-[10px] text-red-500 pl-0.5">{errors.mode.message}</span>
+            )}
           </div>
         </div>
 
-        {/* Row 4: Preferred Date & Time Slot */}
+        {/* Row 5: Preferred Date & Time Slot */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           {/* Preferred Date */}
           <div className="flex flex-col gap-1 w-full min-w-0">
@@ -379,44 +446,59 @@ export default function ConsultationForm({
           </div>
         </div>
 
-        {/* Row 5: Birth Details */}
+        {/* Row 6: Birth Details */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
           <div className="flex flex-col gap-1 w-full min-w-0">
-            <label className="font-body text-[10px] sm:text-[11px] font-medium text-[#4B5563]">
-              Date of Birth
+            <label className="font-body text-[11px] sm:text-xs font-semibold text-[#1F2937]">
+              Date of Birth *
             </label>
             <input
               type="date"
               {...register("dob")}
-              className="w-full min-h-[42px] px-3.5 rounded-xl border border-[#ECECEC] bg-[#FAFAFA] text-[#1F2937] focus:outline-none focus:border-[#123E25] focus:bg-white transition-all duration-200 font-body text-xs"
+              className={`w-full min-h-[44px] sm:min-h-[48px] px-3.5 sm:px-4 rounded-xl sm:rounded-[14px] border bg-[#FAFAFA] text-[#1F2937] focus:outline-none focus:border-[#123E25] focus:bg-white transition-all duration-200 font-body text-xs sm:text-sm ${
+                errors.dob ? "border-red-400" : "border-[#ECECEC]"
+              }`}
             />
+            {errors.dob && (
+              <span className="font-body text-[10px] text-red-500 pl-0.5">{errors.dob.message}</span>
+            )}
           </div>
 
           <div className="flex flex-col gap-1 w-full min-w-0">
-            <label className="font-body text-[10px] sm:text-[11px] font-medium text-[#4B5563]">
-              Birth Time
+            <label className="font-body text-[11px] sm:text-xs font-semibold text-[#1F2937]">
+              Birth Time *
             </label>
             <input
               type="time"
               {...register("bornTime")}
-              className="w-full min-h-[42px] px-3.5 rounded-xl border border-[#ECECEC] bg-[#FAFAFA] text-[#1F2937] focus:outline-none focus:border-[#123E25] focus:bg-white transition-all duration-200 font-body text-xs"
+              className={`w-full min-h-[44px] sm:min-h-[48px] px-3.5 sm:px-4 rounded-xl sm:rounded-[14px] border bg-[#FAFAFA] text-[#1F2937] focus:outline-none focus:border-[#123E25] focus:bg-white transition-all duration-200 font-body text-xs sm:text-sm ${
+                errors.bornTime ? "border-red-400" : "border-[#ECECEC]"
+              }`}
             />
+            {errors.bornTime && (
+              <span className="font-body text-[10px] text-red-500 pl-0.5">{errors.bornTime.message}</span>
+            )}
           </div>
 
           <div className="flex flex-col gap-1 w-full min-w-0">
-            <label className="font-body text-[10px] sm:text-[11px] font-medium text-[#4B5563]">
-              Birth Place
+            <label className="font-body text-[11px] sm:text-xs font-semibold text-[#1F2937]">
+              Birth Place *
             </label>
             <input
               type="text"
               placeholder="e.g. Ahmedabad"
               {...register("bornPlace")}
-              className="w-full min-h-[42px] px-3.5 rounded-xl border border-[#ECECEC] bg-[#FAFAFA] text-[#1F2937] placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#123E25] focus:bg-white transition-all duration-200 font-body text-xs"
+              className={`w-full min-h-[44px] sm:min-h-[48px] px-3.5 sm:px-4 rounded-xl sm:rounded-[14px] border bg-[#FAFAFA] text-[#1F2937] placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#123E25] focus:bg-white transition-all duration-200 font-body text-xs sm:text-sm ${
+                errors.bornPlace ? "border-red-400" : "border-[#ECECEC]"
+              }`}
             />
+            {errors.bornPlace && (
+              <span className="font-body text-[10px] text-red-500 pl-0.5">{errors.bornPlace.message}</span>
+            )}
           </div>
         </div>
 
-        {/* Row 6: Message */}
+        {/* Row 7: Notes / Additional Message */}
         <div className="flex flex-col gap-1 w-full min-w-0">
           <label className="font-body text-[11px] sm:text-xs font-semibold text-[#1F2937]">
             Notes / Additional Message (Optional)
