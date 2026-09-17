@@ -233,7 +233,7 @@ export default function Testimonials({ preview = false }: { preview?: boolean })
 
                 {/* CTA Button */}
                 <a
-                  href="https://www.youtube.com/@pariichay_159"
+                  href="https://www.youtube.com/@pariichay_369/videos"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Visit Our YouTube Channel (opens in a new tab)"
