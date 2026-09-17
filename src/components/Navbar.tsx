@@ -15,6 +15,7 @@ const navLinks = [
   { name: "Who We Help", href: "/who-we-help" },
   { name: "Know Your Child", href: "/know-your-child" },
   { name: "Process", href: "/process" },
+  { name: "Career Insights", href: "https://nveducation.edumilestones.com/global-career-library/" },
   { name: "Testimonials", href: "/testimonials" },
   { name: "FAQ", href: "/faq" },
   { name: "Contact", href: "/contact" },
